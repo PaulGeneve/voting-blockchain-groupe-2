@@ -14,7 +14,12 @@ contract Proposition {
     event VotingEnded();
 
     modifier onlyBeforeEnd() {
-        require(block.timestamp < endTime, "Voting period has ended.");
+        require(block.timestamp < endTime, "Voting has ended");
+        _;
+    }
+
+    modifier hasAlreadyVoted() {
+        require(!hasVoted[msg.sender], "You have already voted");
         _;
     }
 
@@ -28,13 +33,13 @@ contract Proposition {
         _;
     }
 
-    constructor() {
+    constructor(string memory _description, uint256 _durationInSeconds) {
         owner = msg.sender;
+        endTime = block.timestamp + _durationInSeconds;
     }
 
     // Function to cast a vote (true for yes, false for no)
-    function vote(bool _vote) external votingActive {
-        require(!hasVoted[msg.sender], "You have already voted");
+    function vote(bool _vote) external onlyBeforeEnd hasAlreadyVoted {
         hasVoted[msg.sender] = true;
 
         if (_vote) {
@@ -46,13 +51,10 @@ contract Proposition {
         emit Voted(msg.sender, _vote);
     }
 
-    // Function to end the voting process
-    function endVoting() external onlyOwner votingActive {
-        votingEnded = true;
-        emit VotingEnded();
+    function isActive() external view returns (bool) {
+        return !votingEnded;
     }
 
-    // Function to retrieve the vote counts (optional, could be public vars)
     function getResults() external view returns (uint256 yes, uint256 no) {
         return (yesVotes, noVotes);
     }

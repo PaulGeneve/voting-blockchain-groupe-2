@@ -5,11 +5,13 @@ const { ethers } = require("hardhat");
 describe("Proposition Contract", function () {
     let proposition: Proposition;
     let owner: any, voter1: any, voter2: any;
+    const VOTING_DURATION = 3600; // 1 hour in seconds
 
     beforeEach(async function () {
         [owner, voter1, voter2] = await ethers.getSigners();
+
         const PropositionFactory = await ethers.getContractFactory("Proposition");
-        proposition = (await PropositionFactory.deploy()) as Proposition;
+        proposition = (await PropositionFactory.deploy("Test Proposition", VOTING_DURATION)) as Proposition;
         await proposition.deployed();
     });
 
@@ -44,25 +46,27 @@ describe("Proposition Contract", function () {
         });
 
         it("Should prevent voting after voting ends", async function () {
-            await proposition.connect(owner).endVoting();
+            // Move time forward by VOTING_DURATION
+            await ethers.provider.send("evm_increaseTime", [VOTING_DURATION]);
             await expect(proposition.connect(voter1).vote(true)).to.be.revertedWith("Voting has ended");
         });
     });
 
-    describe("Ending Voting", function () {
-        it("Should allow the owner to end voting", async function () {
-            await proposition.connect(owner).endVoting();
-            expect(await proposition.votingEnded()).to.equal(true);
-        });
-
-        it("Should emit VotingEnded event when voting ends", async function () {
-            await expect(proposition.connect(owner).endVoting()).to.emit(proposition, "VotingEnded");
-        });
-
-        it("Should prevent non-owners from ending voting", async function () {
-            await expect(proposition.connect(voter1).endVoting()).to.be.revertedWith("Only the owner can perform this action");
-        });
-    });
+    // Uncomment this block if we have implemented the endVoting function, for now we only base ourselves on time
+    // describe("Ending Voting", function () {
+    //     it("Should allow the owner to end voting", async function () {
+    //         await proposition.connect(owner).endVoting();
+    //         expect(await proposition.votingEnded()).to.equal(true);
+    //     });
+    //
+    //     it("Should emit VotingEnded event when voting ends", async function () {
+    //         await expect(proposition.connect(owner).endVoting()).to.emit(proposition, "VotingEnded");
+    //     });
+    //
+    //     it("Should prevent non-owners from ending voting", async function () {
+    //         await expect(proposition.connect(voter1).endVoting()).to.be.revertedWith("Only the owner can perform this action");
+    //     });
+    // });
 
     describe("Results and Percentages", function () {
         it("Should return correct vote counts", async function () {
