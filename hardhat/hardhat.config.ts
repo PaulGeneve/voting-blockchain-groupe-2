@@ -1,8 +1,6 @@
-require("@nomicfoundation/hardhat-ethers");
+require("@nomiclabs/hardhat-waffle");
 import { HardhatUserConfig } from "hardhat/config";
-import "@nomicfoundation/hardhat-toolbox";
 import "@typechain/hardhat";
-
 
 const config: HardhatUserConfig = {
   solidity: "0.8.28",
@@ -10,7 +8,6 @@ const config: HardhatUserConfig = {
     outDir: "typechain-types",
     target: "ethers-v5",
   },
-
 };
 
 export default config;

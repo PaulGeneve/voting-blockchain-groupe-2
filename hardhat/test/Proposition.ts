@@ -1,6 +1,6 @@
-import { expect } from "chai";
 import { Proposition } from "../typechain-types";
-import {ethers} from "hardhat";
+const { expect } = require("chai");
+const { ethers } = require("hardhat");
 
 describe("Proposition Contract", function () {
     let proposition: Proposition;
