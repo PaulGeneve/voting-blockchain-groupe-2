@@ -3,20 +3,20 @@ import { ethers } from "ethers";
 import { useParams } from "react-router-dom";
 // import PropositionArtifact from "../artifacts/contracts/Proposition.sol/Proposition.json";
 import { useUser } from "../contexts/UserContext";
-import Header from "../components/Header.tsx";
 
-type PropositionDetailsType = {
+type PropositionType = {
     description: string;
     yesVotes: number;
     noVotes: number;
     endTime: number;
     votingEnded: boolean;
+    canVote: boolean;
 };
 
-const PropositionDetails: React.FC = () => {
+const Proposition: React.FC = () => {
     const { address } = useParams<{ address: string }>();
     const { user } = useUser();
-    const [details, setDetails] = useState<PropositionDetailsType | null>(null);
+    const [details, setDetails] = useState<PropositionType | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -42,6 +42,7 @@ const PropositionDetails: React.FC = () => {
             const noVotes = await contract.noVotes();
             const endTime = await contract.endTime();
             const votingEnded = await contract.votingEnded();
+            const hasVoted = await contract.hasVoted(user.address);
 
             setDetails({
                 description,
@@ -49,6 +50,7 @@ const PropositionDetails: React.FC = () => {
                 noVotes: Number(noVotes),
                 endTime: Number(endTime),
                 votingEnded,
+                canVote: !hasVoted && !votingEnded,
             });
         } catch (err: any) {
             console.error(err);
@@ -58,13 +60,36 @@ const PropositionDetails: React.FC = () => {
         }
     };
 
+    const vote = async (voteYes: boolean) => {
+        if (!user || !address || !details?.canVote) {
+            setError("Vous ne pouvez pas voter.");
+            return;
+        }
+
+        try {
+            const contract = new ethers.Contract(
+                address,
+                // to update with contract
+                "PropositionArtifact.abi",
+                user
+            );
+
+            const tx = await contract.vote(voteYes);
+            await tx.wait();
+
+            fetchPropositionDetails();
+        } catch (err: any) {
+            console.error(err);
+            setError("Erreur lors du vote.");
+        }
+    };
+
     useEffect(() => {
         fetchPropositionDetails();
     }, [user, address]);
 
     return (
         <div>
-            <Header />
             <h1>Détails de la proposition</h1>
             {error && <p style={{ color: "red" }}>{error}</p>}
             {loading ? (
@@ -88,6 +113,13 @@ const PropositionDetails: React.FC = () => {
                         <strong>Status :</strong>{" "}
                         {details.votingEnded ? "Terminé" : "En cours"}
                     </p>
+
+                    {!details.votingEnded && details.canVote && (
+                        <div>
+                            <button onClick={() => vote(true)}>Voter Oui</button>
+                            <button onClick={() => vote(false)}>Voter Non</button>
+                        </div>
+                    )}
                 </div>
             ) : (
                 <p>Aucune information disponible.</p>
@@ -96,4 +128,4 @@ const PropositionDetails: React.FC = () => {
     );
 };
 
-export default PropositionDetails;
+export default Proposition;
