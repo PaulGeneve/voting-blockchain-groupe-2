@@ -1,0 +1,56 @@
+/* Conteneur principal */
+.proposition-details-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+button {
+    padding: 10px 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 5px;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+p {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.error {
+    color: red;
+    font-size: 16px;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.details {
+    margin-bottom: 20px;
+}
+
+.details strong {
+    font-weight: bold;
+}
+
+.vote-buttons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.vote-buttons button {
+    margin-right: 10px;
+}

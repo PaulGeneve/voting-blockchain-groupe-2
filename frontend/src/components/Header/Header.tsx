@@ -1,4 +1,5 @@
-import { useUser } from "../contexts/UserContext";
+import { useUser } from "../../contexts/UserContext";
+import './Header.css';  // Importation du fichier CSS
 
 const Header = () => {
     const { user, connectUser } = useUser();
@@ -8,12 +9,12 @@ const Header = () => {
     };
 
     return (
-        <header className="flex justify-between items-center p-4 border-b border-gray-200 mb-8 bg-amber-400">
-            <h1 className="text-3xl font-bold">Voting App</h1>
-            <div className="flex items-center space-x-4">
+        <header className="header-container">
+            <h1 className="header-title">Voting App</h1>
+            <div className="header-buttons">
                 <button
                     onClick={handleConnectWallet}
-                    className={`btn ${user ? "btn-success" : "btn-primary"}`}
+                    className={`header-button ${user ? "header-button-connected" : "header-button-primary"}`}
                 >
                     {user ? `Connected ${user.address}` : "Connect Wallet"}
                 </button>

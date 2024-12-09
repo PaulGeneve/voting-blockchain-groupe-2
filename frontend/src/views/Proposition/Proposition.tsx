@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { useParams } from "react-router-dom";
 // import PropositionArtifact from "../artifacts/contracts/Proposition.sol/Proposition.json";
-import { useUser } from "../contexts/UserContext";
+import { useUser } from "../../contexts/UserContext";
+import "./Proposition.css";
 
 type PropositionType = {
     description: string;
@@ -32,7 +33,6 @@ const Proposition: React.FC = () => {
         try {
             const contract = new ethers.Contract(
                 address,
-                // to update with contract
                 "PropositionArtifact.abi",
                 user
             );
@@ -69,7 +69,6 @@ const Proposition: React.FC = () => {
         try {
             const contract = new ethers.Contract(
                 address,
-                // to update with contract
                 "PropositionArtifact.abi",
                 user
             );
@@ -89,13 +88,13 @@ const Proposition: React.FC = () => {
     }, [user, address]);
 
     return (
-        <div>
+        <div className="proposition-details-container">
             <h1>Détails de la proposition</h1>
-            {error && <p style={{ color: "red" }}>{error}</p>}
+            {error && <p className="error">{error}</p>}
             {loading ? (
-                <p>Chargement des détails...</p>
+                <p className="loading">Chargement des détails...</p>
             ) : details ? (
-                <div>
+                <div className="details">
                     <p>
                         <strong>Description :</strong> {details.description}
                     </p>
@@ -115,7 +114,7 @@ const Proposition: React.FC = () => {
                     </p>
 
                     {!details.votingEnded && details.canVote && (
-                        <div>
+                        <div className="vote-buttons">
                             <button onClick={() => vote(true)}>Voter Oui</button>
                             <button onClick={() => vote(false)}>Voter Non</button>
                         </div>

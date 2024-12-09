@@ -2,7 +2,9 @@ import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { Link } from "react-router-dom";
 // import ProposalArtifact from "../artifacts/contracts/Proposal.sol/Proposal.json";
-import { useUser } from "../contexts/UserContext";
+import "./Proposals.css";
+import {useUser} from "../../contexts/UserContext.tsx";
+import Header from "../../components/Header/Header.tsx";
 
 type Proposal = {
     proposalAddress: string;
@@ -33,8 +35,7 @@ const Proposals: React.FC = () => {
         try {
             const contract = new ethers.Contract(
                 proposalContractAddress,
-                // to update with contract
-                "PropositionArtifact.abi",
+                "ProposalArtifact.abi",
                 user
             );
 
@@ -74,8 +75,7 @@ const Proposals: React.FC = () => {
         try {
             const contract = new ethers.Contract(
                 proposalContractAddress,
-                // to update with contract
-                "PropositionArtifact.abi",
+                "ProposalArtifact.abi",
                 user
             );
 
@@ -101,10 +101,12 @@ const Proposals: React.FC = () => {
     }, [user]);
 
     return (
-        <div>
+        <>
+        <Header />
+            <div className="voting-view-container">
             <h1>Propositions de vote</h1>
 
-            {error && <p style={{ color: "red" }}>{error}</p>}
+            {error && <p className="error">{error}</p>}
 
             {/* Formulaire pour soumettre une nouvelle proposition */}
             <h2>Soumettre une nouvelle proposition</h2>
@@ -114,6 +116,7 @@ const Proposals: React.FC = () => {
                 value={newProposalDescription}
                 onChange={(e) => setNewProposalDescription(e.target.value)}
             />
+            <label>Durée (en secondes)</label>
             <input
                 type="number"
                 placeholder="Durée (en secondes)"
@@ -123,7 +126,7 @@ const Proposals: React.FC = () => {
             <button onClick={submitProposal}>Soumettre</button>
 
             {loading ? (
-                <p>Chargement des propositions...</p>
+                <p className="loading">Chargement des propositions...</p>
             ) : proposals.length > 0 ? (
                 <>
                     <h2>Propositions en cours</h2>
@@ -145,6 +148,7 @@ const Proposals: React.FC = () => {
                 <p>Aucune proposition disponible.</p>
             )}
         </div>
+        </>
     );
 };
 

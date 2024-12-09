@@ -1,7 +1,7 @@
 import { UserContextProvider } from "./contexts/UserContext";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Proposals from "./views/Proposals.tsx";
-import Proposition from "./views/Proposition.tsx";
+import Proposals from "./views/Proposals/Proposals.tsx";
+import Proposition from "./views/Proposition/Proposition.tsx";
 
 function App() {
     return (
