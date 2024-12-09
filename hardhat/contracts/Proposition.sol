@@ -34,6 +34,7 @@ contract Proposition {
     }
 
     constructor(string memory _description, uint256 _durationInSeconds) {
+        description = _description;
         owner = msg.sender;
         endTime = block.timestamp + _durationInSeconds;
     }
