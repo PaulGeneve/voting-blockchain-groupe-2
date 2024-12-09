@@ -3,6 +3,7 @@ import { ethers } from "ethers";
 import { Link } from "react-router-dom";
 // import ProposalArtifact from "../artifacts/contracts/Proposal.sol/Proposal.json";
 import { useUser } from "../contexts/UserContext";
+import Header from "../components/Header.tsx";
 
 type Proposal = {
     proposalAddress: string;
@@ -64,6 +65,7 @@ const Proposals: React.FC = () => {
 
     return (
         <div>
+            <Header />
             <h1>Propositions de vote</h1>
             {error && <p style={{ color: "red" }}>{error}</p>}
             {loading ? (

@@ -8,7 +8,7 @@ const Header = () => {
     };
 
     return (
-        <header className="flex justify-between items-center p-4 border-b border-gray-200 mb-8">
+        <header className="flex justify-between items-center p-4 border-b border-gray-200 mb-8 bg-amber-400">
             <h1 className="text-3xl font-bold">Voting App</h1>
             <div className="flex items-center space-x-4">
                 <button
