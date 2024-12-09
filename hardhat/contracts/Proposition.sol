@@ -11,7 +11,6 @@ contract Proposition {
     bool public votingEnded;
 
     event Voted(address indexed voter, bool vote);
-    event VotingEnded();
 
     modifier onlyBeforeEnd() {
         require(block.timestamp < endTime, "Voting has ended");

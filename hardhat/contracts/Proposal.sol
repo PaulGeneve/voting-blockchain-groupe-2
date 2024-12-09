@@ -14,7 +14,6 @@ contract Proposal {
     Proposals[] public proposals;
 
     event ProposalCreated(address indexed proposalAddress, string description);
-    event ProposalClosed(address indexed proposalAddress);
 
     function createProposal(string memory _description, uint256 _duration) external {
         Proposition newProposal = new Proposition(_description, _duration);

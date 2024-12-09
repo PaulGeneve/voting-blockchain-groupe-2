@@ -34,6 +34,10 @@ describe("Proposition Contract", function () {
             expect(await proposition.hasVoted(voter1.address)).to.equal(true);
         });
 
+        it("Should emit event Voted when a user votes", async function () {
+            await expect(proposition.connect(voter1).vote(true)).to.emit(proposition, "Voted");
+        })
+
         it("Should allow a user to vote 'no'", async function () {
             await proposition.connect(voter1).vote(false);
             expect(await proposition.noVotes()).to.equal(1);
