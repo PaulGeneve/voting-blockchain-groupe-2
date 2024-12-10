@@ -8,7 +8,6 @@ contract Proposition {
     mapping(address => bool) public hasVoted;
     uint256 public yesVotes;
     uint256 public noVotes;
-    bool public votingEnded;
 
     event Voted(address indexed voter, bool vote);
 
@@ -24,11 +23,6 @@ contract Proposition {
 
     modifier onlyOwner() {
         require(msg.sender == owner, "Only the owner can perform this action");
-        _;
-    }
-
-    modifier votingActive() {
-        require(!votingEnded, "Voting has ended");
         _;
     }
 
@@ -52,7 +46,7 @@ contract Proposition {
     }
 
     function isActive() external view returns (bool) {
-        return !votingEnded;
+        return block.timestamp < endTime;
     }
 
     function getResults() external view returns (uint256 yes, uint256 no) {

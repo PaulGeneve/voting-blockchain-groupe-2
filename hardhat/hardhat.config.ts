@@ -3,6 +3,7 @@ require("@nomiclabs/hardhat-waffle");
 import "@nomiclabs/hardhat-ethers";
 import { HardhatUserConfig } from "hardhat/config";
 import "@typechain/hardhat";
+import "./scripts/deploy";
 
 deploy.setDescription("Deploy the Proposal contract");
 

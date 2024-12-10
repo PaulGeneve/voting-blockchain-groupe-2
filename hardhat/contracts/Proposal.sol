@@ -4,73 +4,58 @@ pragma solidity ^0.8.10;
 import "./Proposition.sol";
 
 contract Proposal {
-    struct Proposals {
-        address proposalAddress;
-        string description;
-        uint256 createdAt;
-        bool isActive;
+    Proposition[] public propositions;
+
+    event ProposalCreated(address indexed propositionAddress, string description);
+
+    function addProposition(Proposition proposition) external {
+        propositions.push(proposition);
+
+        emit ProposalCreated(address(proposition), proposition.description());
     }
 
-    Proposals[] public proposals;
-
-    event ProposalCreated(address indexed proposalAddress, string description);
-
-    function createProposal(string memory _description, uint256 _duration) external {
-        Proposition newProposal = new Proposition(_description, _duration);
-        address proposalAddress = address(newProposal);
-
-        proposals.push(Proposals({
-            proposalAddress: proposalAddress,
-            description: _description,
-            createdAt: block.timestamp,
-            isActive: true
-        }));
-
-        emit ProposalCreated(proposalAddress, _description);
-    }
-
-    function getActiveProposals() external view returns (Proposals[] memory) {
+    function getActiveProposals() external view returns (Proposition[] memory) {
         uint256 count = 0;
-        for (uint i = 0; i < proposals.length; i++) {
-            if (proposals[i].isActive) {
+        for (uint i = 0; i < propositions.length; i++) {
+            if (propositions[i].isActive()) {
                 count++;
             }
         }
 
-        Proposals[] memory activeProposals = new Proposals[](count);
+        Proposition[] memory activeProposals = new Proposition[](count);
         uint index;
-        for (uint i = 0; i < proposals.length; i++) {
-            if (proposals[i].isActive) {
-                activeProposals[index++] = proposals[i];
+        for (uint i = 0; i < propositions.length; i++) {
+            if (propositions[i].isActive()) {
+                activeProposals[index++] = propositions[i];
             }
         }
 
         return activeProposals;
     }
 
-    function getExpiredProposals() external view returns (Proposals[] memory) {
+    function getExpiredProposals() external view returns (Proposition[] memory) {
         uint256 count = 0;
 
-        // Compter combien de propositions expirées existent
-        for (uint i = 0; i < proposals.length; i++) {
-            if (proposals[i].isActive) {
+        for (uint i = 0; i < propositions.length; i++) {
+            if (!propositions[i].isActive()) {
                 count++;
             }
         }
+        if (count == 0) {
+            return new Proposition[](0);
+        }
 
-        // Créer le tableau dynamique en mémoire de la bonne taille
-        Proposals[] memory expiredProposals = new Proposals[](count);
+        Proposition[] memory expiredProposals = new Proposition[](count);
         uint256 index = 0;
 
-        for (uint i = 0; i < proposals.length; i++) {
-            if (proposals[i].isActive) {
+        for (uint i = 0; i < propositions.length; i++) {
+            if (propositions[i].isActive()) {
 
-                expiredProposals[index] = proposals[i];
+                expiredProposals[index] = propositions[i];
                 index++;
             }
         }
 
         return expiredProposals;
     }
-
 }

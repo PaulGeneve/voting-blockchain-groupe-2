@@ -23,7 +23,6 @@ describe("Proposition Contract", function () {
         it("Should initialize votes and state correctly", async function () {
             expect(await proposition.yesVotes()).to.equal(0);
             expect(await proposition.noVotes()).to.equal(0);
-            expect(await proposition.votingEnded()).to.equal(false);
         });
     });
 
