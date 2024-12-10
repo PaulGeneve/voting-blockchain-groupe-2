@@ -51,7 +51,7 @@ contract Proposal {
     function getExpiredProposals() external view returns (Proposals[] memory) {
         uint256 count = 0;
         for (uint i = 0; i < proposals.length; i++) {
-            if (proposals[i].isActive) {
+            if (!proposals[i].isActive) {
                 count++;
             }
         }
@@ -60,7 +60,7 @@ contract Proposal {
         uint256 index = 0;
 
         for (uint i = 0; i < proposals.length; i++) {
-            if (proposals[i].isActive) {
+            if (!proposals[i].isActive) {
 
                 expiredProposals[index] = proposals[i];
                 index++;

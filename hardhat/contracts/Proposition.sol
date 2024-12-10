@@ -52,7 +52,7 @@ contract Proposition {
     }
 
     function isActive() external view returns (bool) {
-        return !votingEnded;
+        return block.timestamp < endTime;
     }
 
     function getResults() external view returns (uint256 yes, uint256 no) {

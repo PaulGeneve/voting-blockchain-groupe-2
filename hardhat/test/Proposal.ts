@@ -68,7 +68,7 @@ describe("Proposal Contract", function () {
 
         const expiredProposals = await proposal.getExpiredProposals();
 
-        expect(expiredProposals.length).to.equal(2);
+        expect(expiredProposals.length).to.equal(1);
         expect(expiredProposals[0].description).to.equal("Proposal A");
     });
 });
