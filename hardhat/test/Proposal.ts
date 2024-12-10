@@ -1,4 +1,4 @@
-import {Proposal} from "../typechain-types";
+import {Proposal, Proposition} from "../typechain-types";
 
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
@@ -26,9 +26,12 @@ describe("Proposal Contract", function () {
         await proposal.createProposal(description, duration);
         const proposals = await proposal.getActiveProposals();
 
+        const PropositionFactory = await ethers.getContractFactory("Proposition");
+        const proposition = await PropositionFactory.attach(proposals[0]) as Proposition;
+
         expect(proposals.length).to.equal(1);
-        expect(proposals[0].description).to.equal(description);
-        expect(proposals[0].isActive).to.equal(true);
+        expect(await proposition.description()).to.equal(description);
+        expect(await proposition.isActive()).to.equal(true);
     });
 
     it("Should emit event ProposalCreated when creating a proposal", async function () {
@@ -68,7 +71,7 @@ describe("Proposal Contract", function () {
 
         const expiredProposals = await proposal.getExpiredProposals();
 
-        expect(expiredProposals.length).to.equal(2);
+        expect(expiredProposals.length).to.equal(1);
         expect(expiredProposals[0].description).to.equal("Proposal A");
     });
 });

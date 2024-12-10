@@ -78,7 +78,7 @@ const Proposition: React.FC = () => {
 
             fetchPropositionDetails();
         } catch (error) {
-            console.error(error);
+            console.log(error);
             setError("Erreur lors du vote.");
         }
     };

@@ -4,43 +4,29 @@ pragma solidity ^0.8.10;
 import "./Proposition.sol";
 
 contract Proposal {
-    struct Proposals {
-        address proposalAddress;
-        string description;
-        uint256 createdAt;
-        bool isActive;
-    }
-
-    Proposals[] public proposals;
+    Proposition[] public proposals;
 
     event ProposalCreated(address indexed proposalAddress, string description);
 
     function createProposal(string memory _description, uint256 _duration) external {
         Proposition newProposal = new Proposition(_description, _duration);
-        address proposalAddress = address(newProposal);
+        proposals.push(newProposal);
 
-        proposals.push(Proposals({
-            proposalAddress: proposalAddress,
-            description: _description,
-            createdAt: block.timestamp,
-            isActive: true
-        }));
-
-        emit ProposalCreated(proposalAddress, _description);
+        emit ProposalCreated(address(newProposal), _description);
     }
 
-    function getActiveProposals() external view returns (Proposals[] memory) {
+    function getActiveProposals() external view returns (Proposition[] memory) {
         uint256 count = 0;
         for (uint i = 0; i < proposals.length; i++) {
-            if (proposals[i].isActive) {
+            if (proposals[i].isActive()) {
                 count++;
             }
         }
 
-        Proposals[] memory activeProposals = new Proposals[](count);
+        Proposition[] memory activeProposals = new Proposition[](count);
         uint index;
         for (uint i = 0; i < proposals.length; i++) {
-            if (proposals[i].isActive) {
+            if (proposals[i].isActive()) {
                 activeProposals[index++] = proposals[i];
             }
         }
@@ -48,19 +34,19 @@ contract Proposal {
         return activeProposals;
     }
 
-    function getExpiredProposals() external view returns (Proposals[] memory) {
+    function getExpiredProposals() external view returns (Proposition[] memory) {
         uint256 count = 0;
         for (uint i = 0; i < proposals.length; i++) {
-            if (proposals[i].isActive) {
+            if (!proposals[i].isActive()) {
                 count++;
             }
         }
 
-        Proposals[] memory expiredProposals = new Proposals[](count);
+        Proposition[] memory expiredProposals = new Proposition[](count);
         uint256 index = 0;
 
         for (uint i = 0; i < proposals.length; i++) {
-            if (proposals[i].isActive) {
+            if (!proposals[i].isActive()) {
 
                 expiredProposals[index] = proposals[i];
                 index++;
