@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { Link } from "react-router-dom";
-// import ProposalArtifact from "../artifacts/contracts/Proposal.sol/Proposal.json";
+import ProposalArtifact from "../../../../hardhat/artifacts/contracts/Proposal.sol/Proposal.json";
 import "./Proposals.css";
 import {useUser} from "../../contexts/UserContext.tsx";
 import Header from "../../components/Header/Header.tsx";
@@ -35,7 +35,7 @@ const Proposals: React.FC = () => {
         try {
             const contract = new ethers.Contract(
                 proposalContractAddress,
-                "ProposalArtifact.abi",
+                ProposalArtifact.abi,
                 user
             );
 
@@ -43,13 +43,13 @@ const Proposals: React.FC = () => {
             const expiredProposals = await contract.getExpiredProposals();
 
             const formattedProposals: Proposal[] = [
-                ...activeProposals.map((p: any) => ({
+                ...activeProposals.map((p: Proposal) => ({
                     proposalAddress: p.proposalAddress,
                     description: p.description,
                     createdAt: Number(p.createdAt),
                     isActive: p.isActive,
                 })),
-                ...expiredProposals.map((p: any) => ({
+                ...expiredProposals.map((p: Proposal) => ({
                     proposalAddress: p.proposalAddress,
                     description: p.description,
                     createdAt: Number(p.createdAt),
@@ -58,8 +58,8 @@ const Proposals: React.FC = () => {
             ];
 
             setProposals(formattedProposals);
-        } catch (err: any) {
-            console.error(err);
+        } catch (error) {
+            console.log(error);
             setError("Erreur lors de la récupération des propositions.");
         } finally {
             setLoading(false);
@@ -75,7 +75,7 @@ const Proposals: React.FC = () => {
         try {
             const contract = new ethers.Contract(
                 proposalContractAddress,
-                "ProposalArtifact.abi",
+                ProposalArtifact.abi,
                 user
             );
 
@@ -88,8 +88,8 @@ const Proposals: React.FC = () => {
             setNewProposalDescription("");
             setNewProposalDuration(0);
             fetchProposals();
-        } catch (err: any) {
-            console.error(err);
+        } catch (error) {
+            console.log(error);
             setError("Erreur lors de la soumission de la proposition.");
         }
     };

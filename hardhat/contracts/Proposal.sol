@@ -50,20 +50,17 @@ contract Proposal {
 
     function getExpiredProposals() external view returns (Proposals[] memory) {
         uint256 count = 0;
-
-        // Compter combien de propositions expirées existent
         for (uint i = 0; i < proposals.length; i++) {
-            if (proposals[i].isActive) {
+            if (!proposals[i].isActive) {
                 count++;
             }
         }
 
-        // Créer le tableau dynamique en mémoire de la bonne taille
         Proposals[] memory expiredProposals = new Proposals[](count);
         uint256 index = 0;
 
         for (uint i = 0; i < proposals.length; i++) {
-            if (proposals[i].isActive) {
+            if (!proposals[i].isActive) {
 
                 expiredProposals[index] = proposals[i];
                 index++;

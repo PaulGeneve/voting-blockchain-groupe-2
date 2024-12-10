@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { useParams } from "react-router-dom";
-// import PropositionArtifact from "../artifacts/contracts/Proposition.sol/Proposition.json";
+import PropositionArtifact from "../../../../hardhat/artifacts/contracts/Proposition.sol/Proposition.json";
 import { useUser } from "../../contexts/UserContext";
 import "./Proposition.css";
 
@@ -33,7 +33,7 @@ const Proposition: React.FC = () => {
         try {
             const contract = new ethers.Contract(
                 address,
-                "PropositionArtifact.abi",
+                PropositionArtifact.abi,
                 user
             );
 
@@ -52,8 +52,8 @@ const Proposition: React.FC = () => {
                 votingEnded,
                 canVote: !hasVoted && !votingEnded,
             });
-        } catch (err: any) {
-            console.error(err);
+        } catch (error) {
+            console.error(error);
             setError("Erreur lors de la récupération des détails.");
         } finally {
             setLoading(false);
@@ -69,7 +69,7 @@ const Proposition: React.FC = () => {
         try {
             const contract = new ethers.Contract(
                 address,
-                "PropositionArtifact.abi",
+                PropositionArtifact.abi,
                 user
             );
 
@@ -77,8 +77,8 @@ const Proposition: React.FC = () => {
             await tx.wait();
 
             fetchPropositionDetails();
-        } catch (err: any) {
-            console.error(err);
+        } catch (error) {
+            console.error(error);
             setError("Erreur lors du vote.");
         }
     };
