@@ -41,9 +41,12 @@ describe("Proposal Contract", function () {
         await proposal.createProposal(description, duration);
         const proposals = await proposal.getActiveProposals();
 
+        const PropositionFactory = await ethers.getContractFactory("Proposition");
+        const proposition = await PropositionFactory.attach(proposals[0]) as Proposition;
+
         expect(proposals.length).to.equal(1);
-        expect(proposals[0].description).to.equal(description);
-        expect(proposals[0].isActive).to.equal(true);
+        expect(await proposition.description()).to.equal(description);
+        expect(await proposition.isActive()).to.equal(true);
 
         const events = await proposal.queryFilter(proposal.filters.ProposalCreated());
         expect(events.length).to.equal(1);
@@ -56,9 +59,14 @@ describe("Proposal Contract", function () {
 
         const activeProposals = await proposal.getActiveProposals();
 
+        const PropositionFactory = await ethers.getContractFactory("Proposition");
+        const proposition1 = await PropositionFactory.attach(activeProposals[0]) as Proposition;
+        const proposition2 = await PropositionFactory.attach(activeProposals[1]) as Proposition;
+
         expect(activeProposals.length).to.equal(2);
-        expect(activeProposals[0].description).to.equal("Proposal A");
-        expect(activeProposals[1].description).to.equal("Proposal B");
+
+        expect(await proposition1.description()).to.equal("Proposal A");
+        expect(await proposition2.description()).to.equal("Proposal B");
     });
 
     it("Should retrieve all expired proposals", async function () {
@@ -71,7 +79,10 @@ describe("Proposal Contract", function () {
 
         const expiredProposals = await proposal.getExpiredProposals();
 
+        const PropositionFactory = await ethers.getContractFactory("Proposition");
+        const proposition1 = await PropositionFactory.attach(expiredProposals[0]) as Proposition;
+
         expect(expiredProposals.length).to.equal(1);
-        expect(expiredProposals[0].description).to.equal("Proposal A");
+        expect(await proposition1.description()).to.equal("Proposal A");
     });
 });
